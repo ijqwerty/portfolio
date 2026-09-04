@@ -1,31 +1,36 @@
-import React from "react"
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import { themeInitScript } from "@/lib/theme"
+import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+})
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+})
 
 export const metadata: Metadata = {
-  title: 'Full-Stack Developer | Portfolio',
-  description: 'Full-stack web developer specializing in modern technologies. Building accessible, scalable applications with React, Next.js, TypeScript, and more.',
-  generator: 'v0.app',
+  title: "Issaih Jeremiah Mendiola — Software Developer",
+  description:
+    "Software Developer with experience in frontend, backend, and e-commerce systems. Skilled in Next.js, React, Tailwind CSS, and Python (Django REST Framework).",
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
+        url: "/code2.png",
+        type: "image/png",
+        media: "(prefers-color-scheme: light)",
       },
       {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
+        url: "/code2-dark.png",
+        type: "image/png",
+        media: "(prefers-color-scheme: dark)",
       },
     ],
-    apple: '/apple-icon.png',
+    apple: "/code2.png",
   },
 }
 
@@ -35,10 +40,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
-        {children}
-      </body>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="min-h-screen font-sans antialiased">{children}</body>
     </html>
   )
 }
