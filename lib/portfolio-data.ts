@@ -177,21 +177,107 @@ export const projects: Project[] = [
     github: "https://github.com/ijqwerty/next-shopify",
     image: "/projects/headless-ui/01-home.png",
   },
-  // {
-  //   name: "AI Life OS",
-  //   tagline: "Personal productivity platform",
-  //   stack: ["Next.js", "Supabase", "Google Gemini", "Vercel AI SDK"],
-  //   problem:
-  //     "Personal data stays siloed across apps, making it hard to see patterns or prioritize daily focus.",
-  //   solution:
-  //     "A unified platform for tasks, habits, goals, and journaling — with AI-generated briefings, priorities, and coaching grounded in real user data.",
-  //   features: [
-  //     "AI morning briefings and focus schedules",
-  //     "Task management with Kanban and AI prioritization",
-  //     "Habit and goal tracking with analytics",
-  //     "AI Life Coach chat and scheduled performance reviews",
-  //   ],
-  // },
+  {
+    name: "Ghost-AI",
+    tagline: "AI-powered collaborative system architecture",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "React Flow",
+      "Liveblocks",
+      "Clerk",
+      "PostgreSQL",
+      "Prisma",
+      "Trigger.dev",
+      "Google Gemini",
+      "Tailwind CSS",
+      "Vercel Blob"
+    ],
+    problem:
+      "Designing software architecture requires translating ideas into clear diagrams and technical specifications, often across disconnected tools with limited real-time collaboration.",
+    solution:
+      "A real-time collaborative architecture workspace where users describe systems in plain English, an AI agent generates and edits diagrams directly on a shared canvas, and teams collaborate live before generating downloadable Markdown technical specifications.",
+    features: [
+      "Project management with email-based collaborator invitations",
+      "Real-time canvas with six node shapes, customizable styling, labeled connections, live cursors, and shared undo/redo",
+      "AI Architect powered by Google Gemini for adding, updating, moving, and deleting nodes and edges",
+      "Durable background AI jobs with live status updates and shared canvas synchronization",
+      "Semantic architecture modeling with node roles, notes, and command, query, or event connections",
+      "AI-generated Markdown technical specs with canvas-grounded claims, suggested improvements, and flagged architecture gaps",
+      "In-app specification preview and downloadable Markdown export",
+      "Three starter architecture templates: Microservices, CI/CD Pipeline, and Event-Driven System",
+      "Shared room chat, automatic canvas saving to Vercel Blob, and save-status indicators"
+    ],
+    link: "https://ghost-ai-ivory-five.vercel.app",
+    github: "https://github.com/ijqwerty/ghost-ai-new",
+    image: "/projects/ghost-ai/01-ai-architecture-hero.png",
+  },
+  {
+    name: "TradeX",
+    tagline: "Crypto Market Journal",
+    "stack": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "CoinGecko API",
+      "TradingView Lightweight Charts"
+    ],
+    "problem": "Cryptocurrency market data is often presented through complex trading terminals that can feel overwhelming for users who simply want to track market movements, explore coin performance, and monitor their favorite cryptocurrencies in one place.",
+    "solution": "A cryptocurrency market dashboard designed like a printed financial journal rather than a traditional trading terminal. Users can explore live market prices, interactive candlestick charts, trending cryptocurrencies, market statistics, recent trades, exchange listings, and currency conversions, while maintaining a personal watchlist without needing an account.",
+    "features": [
+      "Market overview featuring total market capitalization, 24-hour trading volume, BTC and ETH dominance, and a featured Bitcoin chart",
+      "Trending cryptocurrencies, biggest gainers and losers among the top 250 coins, and top 10 market categories",
+      "All Coins table with pagination, sorting by market capitalization or trading volume, and URL-persisted filters and page state",
+      "Mobile-optimized coin listings with a separate list layout and indicators showing rising, falling, and unchanged coin prices",
+      "Detailed cryptocurrency pages with live prices and real-time connection status indicators",
+      "Interactive candlestick charts with seven time ranges from 1D to Max and Open, High, Low, and Close values displayed on candle hover",
+      "Detailed market statistics, recent on-chain trades, and top 10 exchange listings ranked by trading volume",
+      "Currency converter supporting all currencies quoted by the CoinGecko API",
+      "Search pop-up accessible through Ctrl/⌘ + K, featuring trending coins and debounced search results",
+      "Personal watchlist supporting up to 50 starred cryptocurrencies, saved locally without requiring an account",
+      "Automatic watchlist synchronization across open browser tabs",
+      "Server-fetched cryptocurrency market data with WebSocket streaming for live prices, trades, and chart candles",
+      "Comprehensive loading, error, and empty states with accessibility support, including screen-reader labels, status announcements, and keyboard focus management"
+    ],
+    link: "https://trade-x-sandy.vercel.app/",
+    github: "https://github.com/ijqwerty/tradeX",
+    image: "/projects/tradeX/02-market-overview.png",
+  },
+  {
+    "name": "Flowboard",
+    "tagline": "AI-Powered Collaborative Kanban Board",
+    "stack": [
+      "React",
+      "Tailwind CSS",
+      "Node.js",
+      "Express",
+      "PostgreSQL (Neon)",
+      "Socket.IO",
+      "Google Gemini"
+    ],
+    "problem": "Managing projects across teams often involves disconnected task management tools, manual backlog creation, and limited visibility into ongoing work. Teams need a centralized workspace where they can organize tasks, collaborate in real time, and turn project goals into actionable priorities.",
+    "solution": "A real-time collaborative Kanban workspace where teams create boards, invite members, and manage tasks through drag-and-drop workflows with priorities, assignees, and due dates. Live synchronization keeps everyone updated, while an integrated AI assistant powered by Google Gemini generates task backlogs from project goals, breaks tasks into subtasks, and creates insightful sprint summaries.",
+    "features": [
+      "Collaborative Kanban boards with customizable columns and drag-and-drop task management",
+      "Task management with priorities, assignees, due dates, and detailed descriptions",
+      "Real-time board synchronization using Socket.IO to keep task updates consistent across users",
+      "Live collaboration indicators with viewing presence avatars and per-board activity feeds",
+      "AI-powered task generation that transforms project goals into prioritized task backlogs",
+      "AI task breakdown that automatically generates actionable subtasks from existing tasks",
+      "AI sprint summaries highlighting completed work, ongoing tasks, potential risks, and recommendations",
+      "Board sharing with owner, admin, and member roles, including a dedicated member management modal",
+      "Workspace dashboard with KPI cards, tasks-per-board analytics, and owned-versus-shared board visualization",
+      "Cross-board task management through My Tasks, a due-date calendar, and a team directory",
+      "Task search and filtering by priority and assignee for easier task discovery",
+      "Keyboard-accessible command menu with ⌘K shortcut for quick navigation and actions",
+      "Email and password authentication with JWT-based session management"
+    ],
+    link: "https://kanban-board-psi-woad-11.vercel.app/",
+    github: "https://github.com/ijqwerty/kanban-board",
+    image: "/projects/kanban-board/01-kanban-board-live-collaboration.png",
+  },
 ]
 
 export const education = {
