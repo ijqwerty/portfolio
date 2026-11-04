@@ -3,9 +3,12 @@ import { Hero } from "@/components/hero"
 import { Experience } from "@/components/experience"
 import { StackMastery } from "@/components/stack-mastery"
 import { Projects } from "@/components/projects"
-import { Education } from "@/components/education"
 import { Contact } from "@/components/contact"
+import { ArrowUp } from "lucide-react"
 import { profile } from "@/lib/portfolio-data"
+
+const footerLinkClass =
+  "inline-flex min-h-11 items-center gap-1 rounded-sm text-xs text-muted-foreground decoration-highlight underline-offset-4 transition-colors hover:text-foreground hover:underline"
 
 export default function Home() {
   return (
@@ -17,22 +20,49 @@ export default function Home() {
         Skip to content
       </a>
       <Header />
-      <main id="main" className="pb-20">
-        <div className="mx-auto max-w-4xl px-6">
+      <main id="main" className="scroll-mt-14 pb-20 md:pb-28">
+        <div className="page-container">
           <Hero />
-          <div className="space-y-20 md:space-y-24">
+          <div className="space-y-22 md:space-y-32">
+            <Projects />
             <Experience />
             <StackMastery />
-            <Projects />
-            {/* <Education /> */}
             <Contact />
           </div>
         </div>
       </main>
-      <footer className="border-t border-border/60 py-8">
-        <p className="mx-auto max-w-4xl px-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} {profile.name}
-        </p>
+      <footer className="border-t border-border/60 py-6">
+        <div className="page-container flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} {profile.name}
+          </p>
+          <ul className="flex flex-wrap items-center justify-center gap-x-5" aria-label="Footer links">
+            <li>
+              <a href={profile.github} target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
+                GitHub
+                <span className="sr-only"> profile (opens in a new tab)</span>
+              </a>
+            </li>
+            <li>
+              <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
+                LinkedIn
+                <span className="sr-only"> profile (opens in a new tab)</span>
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${profile.email}`} className={footerLinkClass}>
+                Email
+                <span className="sr-only"> {profile.email}</span>
+              </a>
+            </li>
+            <li>
+              <a href="#main" className={footerLinkClass}>
+                Back to top
+                <ArrowUp className="size-3.5" aria-hidden />
+              </a>
+            </li>
+          </ul>
+        </div>
       </footer>
     </>
   )

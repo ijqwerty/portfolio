@@ -1,8 +1,8 @@
-import type { CSSProperties } from "react"
 import {
   siAppwrite,
   siCss,
   siDjango,
+  siExpress,
   siGithub,
   siGraphql,
   siHtml5,
@@ -20,8 +20,8 @@ import {
   type SimpleIcon,
 } from "simple-icons"
 import { Waypoints } from "lucide-react"
-import { stackRows, type StackTech } from "@/lib/portfolio-data"
-import { cn } from "@/lib/utils"
+import { stackGroups, type StackTech } from "@/lib/portfolio-data"
+import { Section } from "@/components/section"
 
 const iconMap: Record<string, SimpleIcon> = {
   siHtml5,
@@ -32,6 +32,7 @@ const iconMap: Record<string, SimpleIcon> = {
   siReact,
   siTailwindcss,
   siNodedotjs,
+  siExpress,
   siPython,
   siDjango,
   siPostgresql,
@@ -43,84 +44,44 @@ const iconMap: Record<string, SimpleIcon> = {
   siGithub,
 }
 
-function resolveBrand(hex: string): string {
-  const value = hex.replace("#", "").toLowerCase()
-  if (value === "000" || value === "000000" || value === "fff" || value === "ffffff") {
-    return "var(--foreground)"
-  }
-  return `#${hex}`
-}
-
-function TechCard({ tech }: { tech: StackTech }) {
+function TechItem({ tech }: { tech: StackTech }) {
   const icon = tech.icon ? iconMap[tech.icon] : null
-  const brand = icon ? resolveBrand(icon.hex) : "var(--foreground)"
 
   return (
-    <li className="group flex w-[4.25rem] flex-col items-center gap-2 sm:w-[4.75rem]">
-      <div
-        className={cn(
-          "flex size-12 items-center justify-center rounded-lg border border-border bg-secondary/40 transition-all duration-300 sm:size-14",
-          "group-hover:border-transparent group-hover:bg-card group-hover:shadow-[0_0_0_1px_var(--brand),0_0_16px_-2px_color-mix(in_oklab,var(--brand)_45%,transparent)]"
-        )}
-        style={{ "--brand": brand } as CSSProperties}
-      >
-        {icon ? (
-          <svg
-            role="img"
-            viewBox="0 0 24 24"
-            aria-hidden
-            className="size-5 fill-muted-foreground transition-[fill] duration-300 group-hover:fill-[var(--brand)] sm:size-6"
-          >
-            <path d={icon.path} />
-          </svg>
-        ) : (
-          <Waypoints
-            aria-hidden
-            className="size-5 text-muted-foreground transition-colors duration-300 group-hover:text-foreground sm:size-6"
-          />
-        )}
-      </div>
-      <span className="max-w-full truncate text-center text-[0.625rem] font-medium uppercase tracking-wider text-muted-foreground transition-colors duration-300 group-hover:text-foreground sm:text-[0.6875rem]">
-        {tech.label}
-      </span>
+    <li className="flex items-center gap-3 text-sm text-body">
+      {icon ? (
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden
+          className="size-4 shrink-0 fill-muted-foreground"
+        >
+          <path d={icon.path} />
+        </svg>
+      ) : (
+        <Waypoints aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+      )}
+      {tech.name}
     </li>
   )
 }
 
 export function StackMastery() {
-  const allTechs = stackRows.flat()
-
   return (
-    <section id="stack" className="scroll-mt-16">
-      <div className="mb-10 text-center md:mb-12">
-        <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-          Built With Precision
-        </p>
-        <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-          Stack <span className="text-muted-foreground">Mastery</span>
-        </h2>
-      </div>
-
-      {/* Pyramid rows — tablet and up */}
-      <div className="hidden flex-col items-center gap-3 sm:flex md:gap-4">
-        {stackRows.map((row) => (
-          <ul
-            key={row.map((t) => t.name).join("-")}
-            className="flex flex-wrap items-start justify-center gap-3 md:gap-4"
-          >
-            {row.map((tech) => (
-              <TechCard key={tech.name} tech={tech} />
-            ))}
-          </ul>
+    <Section id="stack" label="Skills" title="Stack">
+      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-4">
+        {stackGroups.map((group) => (
+          <div key={group.title}>
+            <h3 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              {group.title}
+            </h3>
+            <ul className="mt-4 space-y-3">
+              {group.items.map((tech) => (
+                <TechItem key={tech.name} tech={tech} />
+              ))}
+            </ul>
+          </div>
         ))}
       </div>
-
-      {/* Compact grid — mobile */}
-      <ul className="grid grid-cols-3 justify-items-center gap-x-2 gap-y-4 sm:hidden">
-        {allTechs.map((tech) => (
-          <TechCard key={tech.name} tech={tech} />
-        ))}
-      </ul>
-    </section>
+    </Section>
   )
 }

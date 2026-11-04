@@ -4,20 +4,46 @@ type SectionProps = {
   id: string
   label: string
   title: string
+  intro?: string
+  /** Secondary anchor kept so older links to this section still resolve. */
+  aliasId?: string
   children: React.ReactNode
   className?: string
 }
 
-export function Section({ id, label, title, children, className }: SectionProps) {
+export function Section({
+  id,
+  label,
+  title,
+  intro,
+  aliasId,
+  children,
+  className,
+}: SectionProps) {
+  const titleId = `${id}-title`
+
   return (
-    <section id={id} className={cn("scroll-mt-16", className)}>
-      <div className="mb-8">
-        <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-          {label}
-        </p>
-        <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+    <section
+      id={id}
+      aria-labelledby={titleId}
+      className={cn("scroll-mt-20", className)}
+    >
+      {aliasId ? (
+        <span id={aliasId} className="block scroll-mt-20" aria-hidden />
+      ) : null}
+      <div className="mb-10 md:mb-12">
+        <p className="eyebrow mb-3">{label}</p>
+        <h2
+          id={titleId}
+          className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl"
+        >
           {title}
         </h2>
+        {intro ? (
+          <p className="mt-4 max-w-prose text-base leading-relaxed text-body">
+            {intro}
+          </p>
+        ) : null}
       </div>
       {children}
     </section>

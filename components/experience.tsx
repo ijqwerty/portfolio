@@ -1,14 +1,24 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { experience } from "@/lib/portfolio-data"
+import { EducationSummary } from "@/components/education"
+import { Section } from "@/components/section"
 import { cn } from "@/lib/utils"
+
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)"
 
 function prefersReducedMotion() {
   return (
     typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    window.matchMedia(REDUCED_MOTION_QUERY).matches
   )
+}
+
+function subscribeReducedMotion(onChange: () => void) {
+  const media = window.matchMedia(REDUCED_MOTION_QUERY)
+  media.addEventListener("change", onChange)
+  return () => media.removeEventListener("change", onChange)
 }
 
 export function Experience() {
@@ -20,17 +30,14 @@ export function Experience() {
   const [revealed, setRevealed] = useState<boolean[]>(() =>
     experience.map(() => false)
   )
-  const [reducedMotion, setReducedMotion] = useState(false)
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    prefersReducedMotion,
+    () => false
+  )
 
   useEffect(() => {
-    const reduced = prefersReducedMotion()
-    setReducedMotion(reduced)
-
-    if (reduced) {
-      setRevealed(experience.map(() => true))
-      setActiveIndex(experience.length - 1)
-      return
-    }
+    if (reducedMotion) return
 
     const items = itemRefs.current.filter(Boolean) as HTMLLIElement[]
     const observer = new IntersectionObserver(
@@ -54,7 +61,7 @@ export function Experience() {
 
     for (const item of items) observer.observe(item)
     return () => observer.disconnect()
-  }, [])
+  }, [reducedMotion])
 
   useEffect(() => {
     let frame = 0
@@ -133,16 +140,7 @@ export function Experience() {
   }, [])
 
   return (
-    <section id="experience" className="scroll-mt-16">
-      <div className="mb-10 md:mb-12">
-        <p className="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-          Where It All Started
-        </p>
-        <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-          Career <span className="text-muted-foreground">Highlights</span>
-        </h2>
-      </div>
-
+    <Section id="experience" label="Career" title="Experience">
       <ol ref={listRef} className="relative">
         <span
           className="pointer-events-none absolute top-2 bottom-2 w-px -translate-x-1/2 bg-border"
@@ -150,7 +148,7 @@ export function Experience() {
           aria-hidden
         />
         <span
-          className="pointer-events-none absolute top-0 w-px -translate-x-1/2 bg-foreground transition-[height] duration-300 ease-out motion-reduce:transition-none"
+          className="pointer-events-none absolute top-0 w-px -translate-x-1/2 bg-highlight transition-[height] duration-300 ease-out motion-reduce:transition-none"
           style={{ left: trackLeft, height: `${fillHeight}px` }}
           aria-hidden
         />
@@ -158,9 +156,15 @@ export function Experience() {
         {experience.map((job, index) => {
           const isActive = index <= activeIndex
           const isVisible = revealed[index] || reducedMotion
+          const isCurrent = job.period.endsWith("Present")
+          const isMinor = job.tier === "minor"
           const meta = job.employmentType
             ? `${job.company} · ${job.employmentType}`
             : job.company
+          const dateClass = cn(
+            "whitespace-nowrap font-mono text-xs leading-4 tabular-nums transition-colors duration-300",
+            isActive && !isMinor ? "text-foreground" : "text-muted-foreground"
+          )
 
           return (
             <li
@@ -170,7 +174,8 @@ export function Experience() {
               }}
               data-experience-index={index}
               className={cn(
-                "experience-entry relative grid gap-1 pb-12 last:pb-0 md:grid-cols-[10.5rem_minmax(0,1fr)] md:gap-x-8 md:gap-y-0",
+                "experience-entry relative grid last:pb-0 md:grid-cols-[8.5rem_minmax(0,1fr)] md:gap-x-8",
+                job.tier === "primary" ? "pb-10" : "pb-8",
                 isVisible && "experience-entry-visible"
               )}
               style={
@@ -181,47 +186,80 @@ export function Experience() {
             >
               <time
                 className={cn(
-                  "hidden pt-0.5 text-sm font-medium tabular-nums tracking-tight transition-colors duration-300 md:block",
-                  isActive ? "text-foreground" : "text-muted-foreground"
+                  dateClass,
+                  "hidden md:block",
+                  isMinor ? "pt-0.5" : "pt-1.5"
                 )}
               >
                 {job.period}
               </time>
 
               <div className="relative pl-8">
+                {/* Both marker sizes share a 5px horizontal center so the track stays aligned */}
                 <span
                   data-tl-marker
                   className={cn(
-                    "absolute left-0 top-1.5 size-2.5 rounded-full border-2 border-background transition-[background-color,box-shadow,transform] duration-300",
-                    "ring-1 ring-border",
-                    isActive
-                      ? "scale-110 bg-foreground shadow-[0_0_0_3px_color-mix(in_oklab,var(--foreground)_18%,transparent)]"
-                      : "bg-muted-foreground/40"
+                    "absolute rounded-full transition-[background-color,border-color,box-shadow,transform] duration-300",
+                    isMinor
+                      ? "left-px top-1 size-2 border bg-background md:top-1.5"
+                      : "left-0 top-[3px] size-2.5 border-2 border-background ring-1 ring-border md:top-[9px]",
+                    isMinor &&
+                      (isActive ? "border-foreground" : "border-muted-foreground/50"),
+                    !isMinor &&
+                      (isActive
+                        ? isCurrent
+                          ? "scale-110 bg-highlight shadow-[0_0_0_3px_color-mix(in_oklab,var(--highlight)_22%,transparent)]"
+                          : "scale-110 bg-foreground"
+                        : "bg-muted-foreground/40")
                   )}
                   aria-hidden
                 />
 
-                <time
-                  className={cn(
-                    "mb-1.5 block text-sm font-medium tabular-nums tracking-tight transition-colors duration-300 md:hidden",
-                    isActive ? "text-foreground" : "text-muted-foreground"
-                  )}
-                >
+                <time className={cn(dateClass, "mb-1.5 block md:hidden")}>
                   {job.period}
                 </time>
 
-                <h3 className="text-lg font-medium tracking-tight text-foreground md:text-xl">
-                  {job.role}
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">{meta}</p>
-                <p className="mt-3 max-w-prose text-sm leading-relaxed text-muted-foreground md:text-[0.9375rem]">
-                  {job.description}
-                </p>
+                {isMinor ? (
+                  <h3 className="text-sm text-muted-foreground">
+                    {job.role}
+                    <span> · {meta}</span>
+                  </h3>
+                ) : (
+                  <>
+                    <h3
+                      className={cn(
+                        "font-medium tracking-tight text-foreground",
+                        job.tier === "primary"
+                          ? "text-lg md:text-xl"
+                          : "text-base md:text-lg"
+                      )}
+                    >
+                      {job.role}
+                    </h3>
+                    <p className="mt-0.5 text-sm text-muted-foreground">{meta}</p>
+                  </>
+                )}
+
+                {job.highlights ? (
+                  <ul className="mt-3 max-w-prose list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-body md:text-[0.9375rem]">
+                    {job.highlights.map((highlight) => (
+                      <li key={highlight}>{highlight}</li>
+                    ))}
+                  </ul>
+                ) : null}
+
+                {job.summary ? (
+                  <p className="mt-1.5 max-w-prose text-sm leading-relaxed text-body">
+                    {job.summary}
+                  </p>
+                ) : null}
               </div>
             </li>
           )
         })}
       </ol>
-    </section>
+
+      <EducationSummary />
+    </Section>
   )
 }

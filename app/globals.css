@@ -22,7 +22,9 @@
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: oklch(0.90 0.006 90);
   --input: oklch(0.90 0.006 90);
-  --ring: oklch(0.18 0.01 260);
+  --ring: oklch(0.52 0.16 258);
+  --highlight: oklch(0.52 0.16 258);
+  --body: oklch(0.38 0.01 260);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -58,7 +60,9 @@
   --destructive-foreground: oklch(0.96 0.002 90);
   --border: oklch(0.30 0.01 260);
   --input: oklch(0.30 0.01 260);
-  --ring: oklch(0.72 0.01 260);
+  --ring: oklch(0.74 0.12 258);
+  --highlight: oklch(0.74 0.12 258);
+  --body: oklch(0.8 0.008 260);
   --chart-1: oklch(0.72 0.08 260);
   --chart-2: oklch(0.70 0.06 180);
   --chart-3: oklch(0.75 0.08 90);
@@ -96,6 +100,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-highlight: var(--highlight);
+  --color-body: var(--body);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -129,8 +135,20 @@
     color-scheme: dark;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Components that set their own focus ring opt out with outline-none utilities. */
+  :focus-visible {
+    outline: 2px solid var(--highlight);
+    outline-offset: 2px;
   }
 
   ::selection {
@@ -142,7 +160,56 @@
   }
 }
 
+@utility page-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-inline: 1.5rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
 @layer components {
+  .nav-link {
+    position: relative;
+    color: var(--muted-foreground);
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover,
+  .nav-link[aria-current="true"] {
+    color: var(--foreground);
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -0.375rem;
+    height: 2px;
+    border-radius: 9999px;
+    background-color: var(--highlight);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  .nav-link[aria-current="true"]::after {
+    transform: scaleX(1);
+  }
+
   .experience-entry {
     opacity: 0;
     transform: translateY(1rem);
@@ -205,105 +272,16 @@
     transform: translateY(-1px);
   }
 
-  .hero-avatar {
-    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  /* Fixed light surface in both themes: the avatar has an opaque white
+     background, which mix-blend-multiply turns into this tone. */
+  .hero-portrait {
+    isolation: isolate;
+    background-color: oklch(0.95 0.004 90);
+    border: 1px solid oklch(0.86 0.006 90);
   }
 
-  .hero-visual:hover .hero-avatar {
-    transform: scale(1.015);
-  }
-
-  .hero-tech-chip {
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease,
-      border-color 0.3s ease;
-  }
-
-  .hero-tech:hover .hero-tech-chip {
-    transform: translateY(-2px) scale(1.04);
-    border-color: color-mix(in oklab, var(--brand) 35%, var(--border));
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--brand) 20%, transparent),
-      0 10px 18px -12px color-mix(in oklab, var(--brand) 40%, transparent);
-  }
-
-  .hero-tech-pos-1 {
-    left: 2%;
-    top: 28%;
-    --hero-x: 0px;
-  }
-
-  .hero-tech-pos-2 {
-    left: 14%;
-    top: 6%;
-    --hero-x: 0px;
-  }
-
-  .hero-tech-pos-3 {
-    left: 50%;
-    top: 0;
-    --hero-x: -50%;
-  }
-
-  .hero-tech-pos-4 {
-    right: 14%;
-    top: 6%;
-    --hero-x: 0px;
-  }
-
-  .hero-tech-pos-5 {
-    right: 2%;
-    top: 28%;
-    --hero-x: 0px;
-  }
-
-  .hero-tech {
-    --hero-x: 0px;
-    animation: hero-float 5.5s ease-in-out infinite;
-  }
-
-  .hero-tech-delay-1 {
-    animation-delay: 0s;
-  }
-
-  .hero-tech-delay-2 {
-    animation-delay: 0.45s;
-  }
-
-  .hero-tech-delay-3 {
-    animation-delay: 0.9s;
-  }
-
-  .hero-tech-delay-4 {
-    animation-delay: 1.35s;
-  }
-
-  .hero-tech-delay-5 {
-    animation-delay: 1.8s;
-  }
-
-  .hero-scroll-icon {
-    animation: hero-scroll-nudge 1.8s ease-in-out infinite;
-  }
-
-  .project-media-frame {
-    transition:
-      border-color 0.35s ease,
-      box-shadow 0.35s ease;
-  }
-
-  .project-entry:hover .project-media-frame {
-    border-color: color-mix(in oklab, var(--foreground) 22%, var(--border));
-    box-shadow: 0 18px 36px -22px color-mix(in oklab, var(--foreground) 40%, transparent);
-  }
-
-  .project-media-image {
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .project-entry:hover .project-media-image {
-    transform: scale(1.035);
+  .dark .hero-portrait {
+    border-color: oklch(0.52 0.01 260);
   }
 
   .project-link {
@@ -330,38 +308,19 @@
     }
   }
 
-  @keyframes hero-float {
-    0%,
-    100% {
-      transform: translateX(var(--hero-x, 0px)) translateY(0);
-    }
-
-    50% {
-      transform: translateX(var(--hero-x, 0px)) translateY(-5px);
-    }
-  }
-
-  @keyframes hero-scroll-nudge {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-
-    50% {
-      transform: translateY(3px);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
+    .nav-link,
+    .nav-link::after {
+      transition: none;
+    }
+
     .experience-entry {
       opacity: 1;
       transform: none;
       transition: none;
     }
 
-    .hero-reveal,
-    .hero-tech,
-    .hero-scroll-icon {
+    .hero-reveal {
       opacity: 1;
       transform: none;
       animation: none;
@@ -369,18 +328,8 @@
 
     .hero-cta:hover,
     .hero-resume:hover,
-    .hero-visual:hover .hero-avatar,
-    .hero-tech:hover .hero-tech-chip,
     .project-link:hover {
       transform: none;
-    }
-
-    .project-entry:hover .project-media-image {
-      transform: none;
-    }
-
-    .project-entry:hover .project-media-frame {
-      box-shadow: none;
     }
   }
 }
