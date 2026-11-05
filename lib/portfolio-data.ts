@@ -14,7 +14,7 @@ export const profile = {
   positioning:
     "Since 2024, I've built and maintained systems for the City Government of Surigao, from React interfaces to Django REST APIs, including deployment support. I also build real-time, AI-assisted applications like Ghost AI and Flowboard.",
   /** Public path for the existing resume in public/resume */
-  resumeHref: "/resume/Mendiola, Issaih Jeremiah - CV.pdf",
+  resumeHref: "/resume/Mendiola, Issaih Jeremiah - Resume.pdf",
 }
 
 export type StackTech = {
